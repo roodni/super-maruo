@@ -1,0 +1,172 @@
+/* メイン画面 */
+#main{
+	border:1px solid #aaaaaa;
+	visibility:hidden;
+	font-size:16px;
+}
+
+/* エディット画面 */
+#edit{
+	width:180px;
+	border:1px solid #aaaaaa;
+	background-color:#dddddd;
+	visibility:hidden;
+	overflow-y:scroll;
+	font-size:12px;
+}
+#edit fieldset {
+	white-space:nowrap;
+}
+#edit input {
+	font-size:12px;
+}
+
+/* おぶじぇくとの親 */
+.objParent{
+	margin:0px;padding:0px;
+	position:absolute;
+	background-color:transparent;
+}
+
+/* おぶじぇくと */
+.obj{
+	visibility:hidden;
+}
+/* マルオ */
+#maruo{z-index:1;}
+
+
+/* ミニパーツ */
+.part{
+	margin:0px;padding:0px;
+	position:absolute;
+	overflow:hidden;
+	background-color:transparent;
+}
+
+/* ミニパーツ-画像 */
+.partImg{
+	margin:0px;padding:0px;
+	position:absolute;
+	user-select: none;
+}
+
+/* 選択中のブロック */
+.editSelImg{
+	border:1px solid #555555;
+}
+.editSelText{
+	width:64px;height:32px;
+	border:1px solid #555555;
+	text-align:center;
+}
+
+/* info */
+.info{
+	visibility:hidden;
+	z-index:5;
+}
+
+/* game終了時の表示 */
+.gameEnd{
+	font-size:24px;
+	top:0px;
+	right:5px;
+}
+
+#goalMenu{
+	text-align:center;
+}
+
+/* 残機表示 */
+#dark{
+	background-color:#000000;
+	z-index:4;
+	visibility:hidden;
+}
+#inoki{
+	color:#ffffff;
+	font-size:20px;
+	left:280px;
+	top:245px;
+}
+
+/* 擬似ウィンドウ */
+.menu{
+	margin:0px;padding:0px;
+	position:absolute;
+	overflow:hidden;
+	visibility:hidden;
+	z-index:6;
+	background-color:#ffffff;
+	border-color:#eea500;
+	border-style:solid;
+	font-size:12px;
+}
+#main input {
+	font-size:12px;
+}
+
+/* オプション：メインタイトル */
+#titleMenu{
+	width:320px;
+	height:160px;
+	top:170px;
+	left:160px;
+	text-align:center;
+}
+#titleMenu div {
+	margin:8px;
+}
+
+/* オプション：ブロック選択 */
+#blockMenu{
+	width:320px;
+	height:360px;
+	top:60px;
+	left:140px;
+}
+
+#blockMenuSel{
+	width:305px;height:320px;
+	top:5px;left:5px;
+	overflow-y:scroll;
+	border:1px solid #b0b0b0;
+}
+
+.blockMenuImg{
+	left:5px;
+	width:32px;
+	height:32px;
+	border:1px solid #808080;
+	cursor:pointer;
+}
+
+.blockMenuText{
+	left:40px;
+	width:230px;
+	height:32px;
+	border:1px solid #808080;
+}
+
+#enemyMenu{
+	width:320px;
+	height:360px;
+	top:60px;
+	left:140px;
+}
+
+#enemyMenuSel{
+	width:305px;height:320px;
+	top:5px;left:5px;
+	overflow-y:scroll;
+	border:1px solid #b0b0b0;
+}
+
+/* オプション：復活の呪文 */
+#jumonMenu{
+	width:320px;
+	height:205px;
+	top:130px;
+	left:140px;
+}
