@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>スーパーマルオ</title>
+<link rel="stylesheet" type="text/css" href="maruo.css">
+<link rel="icon" href="./favicon.ico">
+<script type="text/javascript" src="maruo.js"></script>
+</head>
+<body>
+<!-- <bgsound id="BGM" src="hoge.mp3"> -->
+<!-- screenAllここから --><form id="screenAll" name="myform" onDrag="return false;">
+<!-- ゲームメイン画面ここから --><div id="main" class="part">
+<!-- BGと丸男以外のオブジェクト -->
+<script type="text/javascript">
+ <!--
+ (function(){
+	var i,x,y;
+	var tmp="";
+	
+	//俺はBGを作る
+	for(i=0;i<2;i++){
+	 tmp+='<div class="part" id="bg'+i+'">';
+	 for(x=0;x<tileX;x++){
+	  for(y=0;y<tileY;y++){
+	   tmp+='<img alt="" class="partImg" width="'+tileW+'px" height="'+tileH+'px" draggable="false" '+
+	   'onMouseDown="LRcheck();edit.block.put('+i+','+x+','+y+');" onMouseOver="edit.block.put('+i+','+x+','+y+');">';
+	  }
+	 }
+	 tmp+='</div>';
+	}
+	
+	//おぶじぇくと軍団
+	tmp+='<div class="objParent" id="objs">';
+	for(i=0;i<objs.max;i++){
+	 tmp+='<img alt="" class="partImg obj" onclick="edit.form.enemySel('+i+');">';
+	}
+	tmp+='</div>';
+	
+	//お絵かき
+	document.write(tmp);
+ })();
+ //-->
+</script>
+
+<!-- マルオ -->
+<img alt="" class="partImg obj" id="maruo">
+
+<!-- 死んだとき表示されるテキスト -->
+<div class="part info gameEnd" id="deathMenu">
+R：よみがえる<br>
+X：あきらめる<br>
+T：ツイート<br>
+</div>
+
+<!-- クリアしたとき表示されるテキスト -->
+<div class="part info gameEnd" id="goalMenu">
+STAGE CLEAR！<br>
+R：リトライ<br>
+X：おわり　<br>
+T：ツイート
+</div>
+
+<!-- タイム -->
+<div class="part info" id="time" style="font-size:18px;top:0;left:5px;"></div>
+
+<!-- 残機 -->
+<div class="part" id="dark"></div>
+<div class="part info" id="inoki">×<span id="inokiWord"></span></div>
+
+<!-- タイトルメニュー -->
+<div class="menu" id="titleMenu">
+	<div style="font-size:24px; font-weight: bold;">スーパーマルオ</div>
+	<div>2015.9.6 ver0.9.1 → 2022.8.7 ver0.10.1
+	</div>
+	<div>
+		<input type="button" value="ストーリーモード" onclick="menu.title.end();story.play();"><br>
+		<input type="button" value="エディットモード" onclick="menu.title.end();edit.init();">
+	</div>
+	<div>制作：██</div>
+</div>
+
+<!-- ブロック選択メニュー -->
+<div class="menu" id="blockMenu">
+<div class="part" id="blockMenuSel">
+	<script type="text/javascript">
+	 <!--
+	 (function(){
+		var i,j,tmp="";
+		var index=new Array(blocks.length);for(i=0;i<blocks.length;i++){index[i]=i;}	//ソート用一時置き配列
+		index.sort(function(a,b){
+			if(blocks[a].index>blocks[b].index){return 1;}
+			if(blocks[a].index<blocks[b].index){return -1;}
+			return 0;
+		});
+		for(j=0;j<blocks.length;j++){
+			i=index[j];
+			tmp+='<img alt="" class="partImg blockMenuImg" style="top:'+(j*36+5)+'px;" src="'+blocks[i].imageE.src+'" onMouseDown="edit.block.sel('+i+');">';
+			tmp+='<div class="part blockMenuText" style="top:'+(j*36+5)+'px;">'+blocks[i].name+'</div>';
+		}
+		document.write(tmp);
+	 })();
+	 //-->
+	</script>
+</div>
+<div class="part" style="bottom:5px;right:5px;">
+	<input type="button" value="閉じる" onclick="menu.close();">
+</div>
+</div>
+
+<!-- 敵追加メニュー -->
+<div class="menu" id="enemyMenu">
+<div class="part" id="enemyMenuSel">
+	<script type="text/javascript">
+	 <!--
+	 (function(){
+		var i=0,key,tmp="";
+		for(key in objs.enemy){
+		 tmp+='<img alt="" class="partImg blockMenuImg" style="top:'+(i*36+5)+'px;" src="'+objs.enemy[key].image.src+'" onclick="menu.close();edit.form.enemyPut(\''+key+'\');">';
+		 tmp+='<div class="part blockMenuText" style="top:'+(i*36+5)+'px;">'+key+'</div>';
+		 i++;
+		}
+		document.write(tmp);
+	 })();
+	 //-->
+	</script>
+</div>
+<div class="part" style="bottom:5px;right:5px;">
+	<input type="button" value="キャンセル" onclick="menu.close();">
+</div>
+</div>
+
+<!-- 復活の呪文メニュー -->
+<div class="menu" id="jumonMenu">
+	<div style="margin:5px;text-align:center;">
+	<textarea id="jumon" style="width:300px;height:160px;" onfocus="this.select();edit.form.focus=true;" onblur="edit.form.focus=false;"></textarea>
+	</div>
+	<div style="margin:5px;text-align:right;">
+	<input type="button" value="初期化" name="jumonInit">
+	<input type="button" value="取得" onclick="document.myform.jumon.value=pass.get(edit.stage);">
+	<input type="button" value="読み込み" name="jumonLoad">
+	<input type="button" value="閉じる" onclick="menu.close();">
+	</div>
+</div>
+
+<!-- ゲームメイン画面ここまで --></div>
+
+<!-- エディット画面ここから --><div class="part" id="edit">
+
+<img alt="" width="64" height="64" class="partImg editSelImg" style="top:5px;left:5px;" id="editLeftImg">
+<div class="part editSelText" style="top:70px;left:5px;" id="editLeftText"></div>
+<img alt="" width="64" height="64" class="partImg editSelImg" style="top:5px;left:78px;" id="editRightImg">
+<div class="part editSelText" style="top:70px;left:78px;" id="editRightText"></div>
+
+<!-- フォーム -->
+<div class="part" style="left:5px;top:110px;width:140px;">
+<fieldset>
+<legend>基本操作</legend>
+<input type="button" value="ブロック選択(E)" onclick="menu.OpenClose('blockMenu');"><br>
+<input type="button" value="敵追加(W)" onclick="menu.OpenClose('enemyMenu');"><br>
+<input type="button" value="テストプレイ(T)" onclick="edit.form.testPlay(true);"><br>
+<input type="button" value="パスワード(Q)" onclick="menu.jumon.init();"><br>
+<input type="button" value="エディット終了" onclick="edit.end();menu.title.init();">
+</fieldset>
+
+<fieldset>
+<legend>ステージ関係</legend>
+ステージ幅：<input type="text" name="stageW" style="width:2em;" maxlength="3" onfocus="edit.form.focus=true;" onblur="edit.form.focus=false;"><br>
+背景色：#<input type="text" name="backColor" style="width:4em;" maxlength="6" onfocus="edit.form.focus=true;" onblur="edit.form.focus=false;">
+</fieldset>
+
+<fieldset>
+<legend>スクロール</legend>
+カメラ：<input type="text" name="camera" style="width:3em;" maxlength="3" onfocus="edit.form.focus=true;" onblur="edit.form.focus=false;">
+</fieldset>
+
+<fieldset>
+<legend>丸男初期設定</legend>
+X：<input type="text" name="maruoX" style="width:2em;" maxlength="3" onfocus="edit.form.focus=true;" onblur="edit.form.focus=false;">
+Y：<input type="text" name="maruoY" style="width:2em;" maxlength="2" onfocus="edit.form.focus=true;" onblur="edit.form.focus=false;">
+</fieldset>
+
+<fieldset>
+<legend>敵操作</legend>
+X：<input type="text" name="enemyX" style="width:2em;" maxlength="3" onfocus="edit.form.focus=true;" onblur="edit.form.focus=false;">
+Y：<input type="text" name="enemyY" style="width:2em;" maxlength="2" onfocus="edit.form.focus=true;" onblur="edit.form.focus=false;"><br>
+</fieldset>
+
+</div>
+<!-- エディット画面ここまで --></div>
+<!-- screenAllここまで --></form>
+<noscript><p>JavaScriptを有効にしてくださいな</p></noscript>
+<form name="BGMflg">
+<input type="checkbox" name="check" id="check" onchange="bgm.flgchange();" checked><label for="check">BGM</label>
+</form>
+<hr>
+<!-- 説明などここから -->
+<h2>ゲーム説明</h2>
+<p>
+W：ジャンプ<br>
+A,D：左右移動<br>
+X：自滅
+</p>
+<p>
+	<a href="./ruiji.html"><img alt="お金" src="images/goal.gif"></a>
+	を取り、無事画面外まで歩いていければステージクリアです。
+</p>
+<hr>
+<h2>動作環境</h2>
+<p>
+	<del>IE8でかろうじて動きます</del><br>
+	いろいろなブラウザで動きます
+</p>
+<hr>
+<h2>エディットモード</h2>
+<ul>
+	<li>Shiftを押下しながらブロック選択・ブロック配置を行うと右枠が参照される</li>
+	<li>敵をクリックしてから右下フォームを編集すると敵を動かせる</li>
+	<li>Shiftを押下しながら敵をクリックすると敵を消せる</li>
+</ul>
+<hr>
+<!-- 説明などここまで -->
+</body></html>

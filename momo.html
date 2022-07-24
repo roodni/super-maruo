@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>なにこれ</title>
+  </head>
+  <body>
+    <p>
+      キーボードを叩くと鳴る<br>
+      qはちょっと違う
+    </p>
+    <script>
+const ctx = new AudioContext();
+const osci = ctx.createOscillator();
+const gain = ctx.createGain();
+osci.type = 'sine';
+gain.gain.setValueAtTime(0, ctx.currentTime);
+osci.connect(gain);
+gain.connect(ctx.destination);
+
+const osci2 = ctx.createOscillator();
+const gain2 = ctx.createGain();
+osci2.type = 'triangle';
+osci2.frequency.value = 480;
+gain2.gain.setValueAtTime(0, ctx.currentTime);
+osci2.connect(gain2);
+gain2.connect(ctx.destination);
+
+let initial = true;
+
+let x = 0;
+const mouseHandler = (ev) => {
+  x = ev.clientX / document.body.offsetWidth;
+};
+window.addEventListener('mousemove', mouseHandler);
+window.addEventListener('mouseover', mouseHandler);
+
+window.addEventListener('keydown', (ev) => {
+  if (!ev.repeat) {
+    if (initial) {
+      osci.start();
+      osci2.start();
+      initial = false;
+    }
+    if (ev.key === 'q') {
+      gain2.gain.setTargetAtTime(1.0, ctx.currentTime, 0.01);
+      gain2.gain.setTargetAtTime(0, ctx.currentTime + 0.1, 0.07);
+    } else {
+      const f = 220 * (4 ** x);
+      osci.frequency.setTargetAtTime(f, ctx.currentTime, 0.01);
+
+      gain.gain.setTargetAtTime(1, ctx.currentTime, 0.01);
+    }
+  }
+});
+
+window.addEventListener('keyup', (ev) => {
+  if (ev.key === 'q') {
+  } else {
+    gain.gain.setTargetAtTime(0, ctx.currentTime, 0.1);
+  }
+  
+});
+    </script>
+  </body>
+</html>

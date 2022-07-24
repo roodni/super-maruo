@@ -1,0 +1,7 @@
+・フォームのグループ化
+<fieldset>でグループ定義
+<legend>でタイトル指定
+
+・textareaの改行禁止
+JavaScriptでがんばるのみ。
+あははー
