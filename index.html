@@ -56,9 +56,13 @@ T：ツイート<br>
 <!-- クリアしたとき表示されるテキスト -->
 <div class="part info gameEnd" id="goalMenu">
 STAGE CLEAR！<br>
-R：次へ<br>
+R：リトライ<br>
+X：おわり　<br>
 T：ツイート
 </div>
+
+<!-- タイム -->
+<div class="part info" id="time" style="font-size:18px;top:0;left:5px;"></div>
 
 <!-- 残機 -->
 <div class="part" id="dark"></div>
@@ -67,7 +71,7 @@ T：ツイート
 <!-- タイトルメニュー -->
 <div class="menu" id="titleMenu">
 	<div style="font-size:24px; font-weight: bold;">スーパーマルオ</div>
-	<div>2015.9.6 ver0.9.1 → 2022.7.24 ver0.10.0
+	<div>2015.9.6 ver0.9.1 → 2022.8.7 ver0.10.1
 	</div>
 	<div>
 		<input type="button" value="ストーリーモード" onclick="menu.title.end();story.play();"><br>

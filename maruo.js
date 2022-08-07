@@ -972,6 +972,9 @@ var game={
 		 maruo.enemyJump=false;
 		 $(maruo.ele,true);
 		 
+		 //時間表示
+		 $(document.getElementById("time"),1);
+
 		 //れっつぷれい
 		 this.endU=end;
 		 this.lastTime=0;
@@ -988,6 +991,7 @@ var game={
 		var nowTime=(new Date()).getTime();
 		
 		if(nowTime-this.lastTime >= 50){
+			document.getElementById("time").innerHTML=this.totalCntAsTime()+" 秒";
 			
 			var i,j,x,y,work;
 			
@@ -1121,15 +1125,21 @@ var game={
 			case 5:
 			$(document.getElementById("goalMenu"),1);
 			key[82]=false;
+			key[88]=false;
 			this.flg=6;
 			//----- 入力待ち -----
 			case 6:
-			if(key[82]){this.end(1);return;}
+			if(key[82]){this.end(2);return;}
+			if(key[88]){this.end(1);key[88]=false;return;}
 			break;
 			}
 			
 			//--- 再帰の準備 ---
 			this.lastTime=nowTime;	//え？引数で渡した方がかっこいい？文句ならsetTimeoutに言ってくれ。
+			// 2022.8.7追記:
+			// たぶん game.play を無名関数でラップせずにタイマーに渡そうとして書いたコメントだと思う。
+			// その渡し方だと this でバグって動かないので無名関数でラップするように変えたはずだが、
+			// それによって play に引数を渡せることに当時の私は気付かなかったらしい。
 		}
 		setTimeout(function(){game.play();},10);
 	},
@@ -1138,6 +1148,9 @@ var game={
 	moneyIndex:0,	//丸男の頭にくっついてくる金
 	cnt:0,	//冒険中の経過コマ数
 	goalCnt:0,	//金を略奪してからの経過コマ数
+	totalCntAsTime:function(){
+		return ((this.cnt+this.goalCnt)*0.05).toFixed(2);
+	},
 	miss:function(){	//丸男暗殺時に実行
 	 bgm.play(bgm.audios.miss,false);
 	 maruo.ele.src=maruoDImg.src;
@@ -1153,6 +1166,7 @@ var game={
 		maruo.ele.src=maruoImg.src;
 		$(document.getElementById("deathMenu"),0);
 		$(document.getElementById("goalMenu"),0);
+		$(document.getElementById("time",0));
 		this.endU(x);
 	},
 	endU:null	//終了時に実行する関数。エラーなら0、クリアなら1、ミスなら2、中断なら3が引数に渡される。
@@ -1163,6 +1177,7 @@ var game={
 var story={
 	inoki:["気合","根気","何度でもよみがえるさ","たくさん","腐るほど","さざれ石の巌となりて苔のむすまで","infinity","無限","HAHAHA","星の数ほど"],
 	jumon:"1/100/1/12/87cefa/20/9,12,zako,12,12,zako,24,9,zako,57,11,zako,66,9,zako,90,10,goal,94,11,fall,75,13,zako,79,4,zako,89,0,lefToge,89,1,lefToge,89,2,lefToge,89,3,lefToge,89,4,lefToge,76,14,ueToge,77,14,ueToge,78,14,ueToge,84,14,upToge,83,14,ueToge,85,14,ueToge/!z$!!~!%$!!~!%$!!~!%$!!o$!!3$!!M')!9*4$!!M')!-(\"!%$\"!7$!!-&!)!&!!=')!/$#!!$!!\"$!!6$!!M'$+!'$!+$\"!#$!!\"$!!\"$!!6$!!B$!!\"$!!2(!!#$#!!$!!\"$!!\"$!!\"$!!\"$!!C&!'#&!!((&!\"$\"!\"$\"!6$!!\"$!!\"$!!\"$!!#$\"!X$#!\"$#!5$!!\"$!!\"$!!!$#!:##*\"(\"*##!!6$$!\"$$!2$!!!$!!#$\"!?\"#!'\"!#-!$#)!\"#-*&!$$!!D#!\"#!'\".!$\")!\"\"-!<#'!##$!##\"\"$!!#$!\"\"!",
+	// jumon:"1/20/16/11/87cefa/1/18,11,goal/!~!.\"!!2\"$!0\"!!\"\"\"!-\"\"!$\"!!-\"!!%\"!!,\"!!&\"!!!\"\"!)\"!!%\"\"!!\"#!'\"!!'\"#!!\"\"!%\"\"!,\"#!!\"#!/\"\"",
 	isPlaying:false,
 	play:function(){
 		//残機表示(笑)
@@ -1188,8 +1203,9 @@ var story={
 				 break;
 				 
 				 case 1:
-				 alert("Thank you for playing!\n(和訳：時間がなくて、ここまでしかできてません。\n来年は完成品を発表するのでよろしく！)");
-				 
+				 //  alert("Thank you for your playing!\n(和訳：時間がなくて、ここまでしかできてません。\n来年は完成品を発表するのでよろしく！)");
+				 console.log("Thank you for playing!");
+
 				 default:
 				 menu.title.init();
 				 break;
@@ -1447,7 +1463,7 @@ window.onload=function(){
 				tweet("丸男はX="+(maruo.x/tileW).toFixed(1)+"地点にて志半ばで倒れた。");
 			}else if(game.flg==6){
 				//クリア
-				tweet("丸男は約"+((game.cnt+game.goalCnt)*0.05).toFixed(2)+"秒で志を果たした。");
+				tweet("丸男は約"+game.totalCntAsTime()+"秒で志を果たした。");
 			}
 		}
 	});
